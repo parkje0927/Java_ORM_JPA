@@ -31,4 +31,46 @@
 - 테이블이 아닌 객체를 대상으로 검색하는 객체 지향 쿼리
 - SQL 을 추상화해서 특정 데이터베이스 SQL 에 의존 X
 - JPQL 을 한마디로 정희하면 객체 지향 SQL
-- 
+
+### 영속성 관리
+- 영속성 컨텍스트
+- JPA 에서 가장 중요한 2가지
+  + 객체와 관계형 데이터베이스 매핑하기(ORM)
+  + 영속성 컨텍스트
+- 엔티티 매니저 팩토리와 엔티티 매니저
+  + 고객의 요청이 올 때마다 엔티티 매니저를 생성하고 내부적으로 DB connection 을 사용해서 db 에 접근
+- 영속성 컨텍스트
+  + JPA 를 이해하는데 가장 중요한 용어
+  + "엔티티를 영구 저장하는 환경" 이라는 뜻
+  + EntityManager.persist(entity); => persist 는 엔티티를 영속성 컨텍스트에 저장하는 것을 의미
+- 엔티티 매니저 & 영속성 컨텍스트
+  + 영속성 컨텍스트는 논리적 개념, 눈에 보이지 않는다. 
+  + 엔티티 매니저를 통해 영속성 컨텍스트에 접근
+- 엔티티의 생명주기
+  + 비영속 : 영속성 컨텍스트와 전혀 관계가 없는 새로운 상태
+  + 영속 : 영속성 컨텍스트에 관리되는 상태
+  + 준영속 : 영속성 컨텍스트에 저장되었다가 분리된 상태
+  + 삭제 : 삭제된 상태
+<br>
+- 객체를 생성한 상태(비영속)
+  + Member member = new Member();
+  + member.setId("member1");
+  + member.setUserName("회원1");
+- 객체를 저장한 상태(영속)
+  + EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+  + EntityManager em = emf.createEntityManager();
+  + em.persist(member);
+  + 아직 DB 에 저장된 것은 아님
+  + DB 는 이후에 커밋해야 저장된다.
+- 회원 엔티티를 영속성 컨텍스트에서 분리, 준영속 상태
+  + em.detach(member);
+- 객체를 삭제한 상태(삭제) / DB 에서 지움
+  + em.remove(member);  
+<br>
+- 영속성 컨텍스트의 이점
+  + 1차 캐시 (애플리케이션과 DB 사이에 무언가 있는 것이다.)
+  + 동일(identity) 보장
+  + 트랜잭션을 지원하는 쓰기 지연(transactional write-behind)
+  + 변경 감지(Dirty Checking)
+  + 지연 로딩(Lazy Loading)
+  
