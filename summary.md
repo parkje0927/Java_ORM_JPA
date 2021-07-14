@@ -69,8 +69,15 @@
 <br>
 - 영속성 컨텍스트의 이점
   + 1차 캐시 (애플리케이션과 DB 사이에 무언가 있는 것이다.)
+    - 조회를 할 때, 1차 캐시를 먼저 찾는다. 
+    - 1차 캐시에 없을 경우, DB 를 조회 한 뒤 -> 1차 캐시에 저장시키고 -> 이를 반환
   + 동일(identity) 보장
+    - 영속 엔티티의 동일성 보장
   + 트랜잭션을 지원하는 쓰기 지연(transactional write-behind)
+    - 쓰기 지연 SQL 저장소에서 flush 되어 DB 에 INSERT SQL
+    - 즉, tx.commit() => 커밋하는 순간 데이터베이스에 INSERT SQL 을 보낸다.
   + 변경 감지(Dirty Checking)
+    - setId, setName 으로 변경해준 뒤 tx.commit() 만 하면 변경을 감지하여 update 쿼리가 날아간다.
+    - flush() -> 엔티티와 스냅샷(최초로 영속성 컨텍스트에 들어온 상태를 저장해 놓은 것)을 비교 -> UPDATE SQL 생성하여 쓰기 지연 SQL 저장소 -> flush -> commit
   + 지연 로딩(Lazy Loading)
   

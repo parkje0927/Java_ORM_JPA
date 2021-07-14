@@ -49,14 +49,45 @@ public class JpaMain {
             
             //JPQL 
             //대상이 테이블이 아니고 객체이다.
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
-//                    .setFirstResult(5) /* pagination */
-//                    .setMaxResults(8) /* pagination */
-                    .getResultList();
-            for (Member member : result) {
-                System.out.println("member.getName() = " + member.getName());
-            }
+//            List<Member> result = em.createQuery("select m from Member as m", Member.class)
+////                    .setFirstResult(5) /* pagination */
+////                    .setMaxResults(8) /* pagination */
+//                    .getResultList();
+//            for (Member member : result) {
+//                System.out.println("member.getName() = " + member.getName());
+//            }
+//            tx.commit();
+
+            /**
+             * 영속성 컨텍스트
+             */
+            //비영속
+//            Member member = new Member();
+//            member.setId(101L);
+//            member.setName("Hello3");
+//
+//            //영속
+//            em.persist(member);
+//
+//            //1차 캐시에 있는 것을 가져와서 select 쿼리가 안 날아감
+//            Member findMember = em.find(Member.class, 101L);
+//            System.out.println("findMember.getId() = " + findMember.getId());
+//            System.out.println("findMember.getName() = " + findMember.getName());
+
+//            Member findMember1 = em.find(Member.class, 101L); //이때만 쿼리 한 번 나가고
+//            Member findMember2 = em.find(Member.class, 101L); //여기서는 1차 캐시에서 가져오므로 쿼리 안 날아감
+//            System.out.println("result = " + (findMember1 == findMember2)); //1차 캐시로 인해 true
+//
+//            tx.commit();
+
+            //변경 감지
+            Member member = em.find(Member.class, 101L);
+
+            System.out.println("=============");
+            member.setName("HelloORM");
+
             tx.commit();
+            System.out.println("=============");
 
         } catch (Exception e) {
             tx.rollback();
