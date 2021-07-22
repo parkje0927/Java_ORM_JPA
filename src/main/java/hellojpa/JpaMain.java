@@ -81,13 +81,23 @@ public class JpaMain {
 //            tx.commit();
 
             //변경 감지
-            Member member = em.find(Member.class, 101L);
+//            Member member = em.find(Member.class, 101L);
+//
+//            System.out.println("=============");
+//            member.setName("HelloORM");
+//
+//            tx.commit();
+//            System.out.println("=============");
 
+            //플러시
+            Member member = new Member(200L, "member200");
+            em.persist(member);
+
+            em.flush();
+
+            //여기서 insert query 가 날아간다.
             System.out.println("=============");
-            member.setName("HelloORM");
-
             tx.commit();
-            System.out.println("=============");
 
         } catch (Exception e) {
             tx.rollback();
