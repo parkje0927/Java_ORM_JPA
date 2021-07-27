@@ -9,6 +9,7 @@ public class Member {
     @Id
     private Long id;
     private String name;
+    private String age;
 
     public Member() {
     }

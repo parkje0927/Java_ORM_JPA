@@ -90,14 +90,14 @@ public class JpaMain {
 //            System.out.println("=============");
 
             //플러시
-            Member member = new Member(200L, "member200");
-            em.persist(member);
-
-            em.flush();
-
-            //여기서 insert query 가 날아간다.
-            System.out.println("=============");
-            tx.commit();
+//            Member member = new Member(200L, "member200");
+//            em.persist(member);
+//
+//            em.flush();
+//
+//            //여기서 insert query 가 날아간다.
+//            System.out.println("=============");
+//            tx.commit();
 
         } catch (Exception e) {
             tx.rollback();

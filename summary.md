@@ -140,7 +140,35 @@
       - 기본값 : 클래스 이름을 그대로 사용, 가급적 기본값을 사용 
   + @Table
     - 엔티티와 매핑할 테이블 지정
+<br>
 - 데이터베이스 스키마 자동 생성
+  + DDL 을 애플리케이션 실행 시점에 자동 생성
+  + 테이블 중심 -> 객체 중심
+  + 데이터베이스 방언을 활용해서 데이터베이스에 맞는 적절한 DDL 생성
+  + 이렇게 **생성된 DDL 은 개발 장비에서만 사용**
+  + 생성된 DDL 은 운영 서버에서는 사용하지 않거나, 적절히 다듬은 후 사용
+  <br>
+  + hibernate.hbm2ddl.auto 의 value
+    - create : 기존 테이블 삭제 후 다시 생성(drop + create)
+    - create-drop : create 과 같으나 종료 시점에 테이블 drop
+    - update : 변경분만 반영(운영 DB 에는 사용하면 안 됨)
+    - validate : 엔티티와 테이블이 정상 매핑되었는지만 확인
+    - none : 사용하지 않음
+  + 방언에 따라 다르게 query 가 나간다. (예-varchar / varchar2)
+  + **운영 장비에는 절대 create, create-drop, update 사용하면 안된다.**
+  + 개발 초기 단계는 create 또는 update
+  + 테스트 서버는 update 또는 validate
+  + 스테이징과 운영 서버는 validate 또는 none
+  <br>
+  + DDL 생성 기능
+    - @Column(unique 제약 조건) : 데이터베이스에 영향을 준다. 
+    - @Column(length 제약 조건) 
+    - DDL 을 자동 생성할 때만 사용되고 JPA 의 실행 로직에는 영향을 주지 않는다. 
+<br> 
 - 필드와 컬럼 매핑
+
+<br>
 - 기본 키 매핑
+
+<br>
 - 실전 예제 : 1. 요구사항 분석과 기본 매핑
