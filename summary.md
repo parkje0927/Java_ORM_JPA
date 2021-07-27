@@ -166,7 +166,35 @@
     - DDL 을 자동 생성할 때만 사용되고 JPA 의 실행 로직에는 영향을 주지 않는다. 
 <br> 
 - 필드와 컬럼 매핑
-
+  + @Column
+    - name : 필드와 매핑할 테이블의 컬럼 이름
+    - insertable, updatable : 등록, 변경 가능 여부
+    - nullable(DDL) : null 값의 허용 여부를 설정한다. false 로 설정하면 DDL 생성 시 not null 제약조건이 붙는다.
+    - unique(DDL) : @Table 의 uniqueConstraints 와 같지만 한 컬럼에 간단히 유니크 제약조건을 걸 때 사용한다. 
+    - columnDefinition(DDL) : 데이터베이스 컬럼 정보를 직접 줄 수 있다. ex) varchar(100) default 'EMPTY'
+    - length(DDL) : 문자 길이 제약 조건, String 타입에만 사용한다. 
+    - precision, scale(DDL) : BigDecimal 타입에서 사용한다. (BigInteger 도 사용할 수 있다.) <br>
+                              precision 은 소수점을 포함한 전체 자릿수를, scale 은 소수의 자릿수 <br>
+                              참고로 double, float 타입에는 적용되지 않는다. 정밀한 소수를 다루어야 할 때만 사용한다. 
+  + @Enumerated
+    - 주의! ORDINAL 사용 X
+    - enum type 이 추가되면(즉, user, admin 에 guest 가 추가되면) 순서가 바뀔 수도 있다. 굉장히 위험하다.
+    - ORDINAL : enum 의 순서를 데이터베이스에 저장
+    - STRING : enum 의 이름을 데이터베이스에 저장
+  + @ Temporal(DATE, TIME, TIMESTAMP 중 하나를 지정)
+    - private LocalDate localDate;
+    - private LocalDateTime localDateTime;
+    - 위 2가지 방법처럼 사용하면 알아서 생성해준다. 최신버전은 이를 지원하므로 이렇게 사용한다.
+  + @Lob
+    - 데이터베이스 BLOB, CLOB 매핑
+    - @Lob 에는 지정할 수 있는 속성이 없다. 
+    - 매핑하는 필드 타입이 문자면 CLOB 매핑, 나머지는 BLOB 매핑
+      - CLOB : String, char[], java.sql.CLOB
+      - BLOB : byte[], java.sql.BLOB
+  + @Transient
+    - 필드 매핑 X
+    - 데이터베이스에 저장 X, 조회 X
+    - 주로 메모리상에서만 임시로 어떤 값을 보관하고 싶을 때 사용 
 <br>
 - 기본 키 매핑
 
