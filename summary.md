@@ -57,15 +57,20 @@
 <br>
 
 - 객체를 생성한 상태(비영속)
-  + Member member = new Member();
-  + member.setId("member1");
-  + member.setUserName("회원1");
+```markdown
+Member member = new Member();
+member.setId("member1");
+member.setUserName("회원1");
+```
 - 객체를 저장한 상태(영속)
-  + EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
-  + EntityManager em = emf.createEntityManager();
-  + em.persist(member);
-  + 아직 DB 에 저장된 것은 아님
-  + DB 는 이후에 커밋해야 저장된다.
+```markdown
+EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+EntityManager em = emf.createEntityManager();
+em.persist(member);
+
+//아직 DB 에 저장된 것은 아님 
+//DB 는 이후에 커밋해야 저장된다.
+```
 - 회원 엔티티를 영속성 컨텍스트에서 분리, 준영속 상태
   + em.detach(member);
 - 객체를 삭제한 상태(삭제) / DB 에서 지움
@@ -76,7 +81,7 @@
   + 1차 캐시 (애플리케이션과 DB 사이에 무언가 있는 것이다.)
     - 조회를 할 때, 1차 캐시를 먼저 찾는다. 
     - 1차 캐시에 없을 경우, DB 를 조회 한 뒤 -> 1차 캐시에 저장시키고 -> 이를 반환
-  + 동일(identity) 보장
+  + 동일성(identity) 보장
     - 영속 엔티티의 동일성 보장
   + 트랜잭션을 지원하는 쓰기 지연(transactional write-behind)
     - 쓰기 지연 SQL 저장소에서 flush 되어 DB 에 INSERT SQL

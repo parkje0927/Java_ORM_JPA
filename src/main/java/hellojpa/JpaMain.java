@@ -80,6 +80,13 @@ public class JpaMain {
 //
 //            tx.commit();
 
+            //쓰기 지연 SQL
+            //아래 실행 후에는 쓰기 지연 SQL 저장소에 저장된다.
+//            em.persist(memberA);
+
+            //아래 명령어를 실행해야 트랜잭션을 실행한다.
+//            tx.commit();
+
             //변경 감지
 //            Member member = em.find(Member.class, 101L);
 //
