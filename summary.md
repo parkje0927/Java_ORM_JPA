@@ -213,7 +213,27 @@ em.persist(member);
 <br>
 
 - 기본 키 매핑
+```markdown
+- @Id : 직접 할당
+  
+- @GeneratedValue : 자동 생성
+    - IDENTITY
+        + auto_increment
+        + insert sql 을 실행한 이후에 ID 값을 알 수 있다. => em.persist() 시점에 실제 DB insert 날아간다.
+    - SEQUENCE
+        + 주로 Oracle 에서 사용
+        + sequence 에서 값을 가져와서 set
+        + class 마다 @SequenceGenerator 설정을 통해 다르게 설정값을 줄 수 있다.
+        + call next value for 관련 query 가 날아간다. 즉 pk 를 가져온 뒤 -> 영속성 컨텍스트에 넣고 -> tx.commit 때 insert
+        + @SequenceGenerator 설정에서 allocationSize = 50 과 같이 설정을 해서 50개를 미리 가져올 수 있다(1, 51 까지 next value 를 가져와서 설정해둠).
+        + 동시성 문제도 해결한다.
+    - TABLE
+        + 키 생성 전용 테이블을 하나 만들어서 데이터베이스 시퀀스를 흉내내는 전략 / 모든 데이터베이스에 적용 가능 but 성능 이슈
+    - AUTO
+        + 방언에 맞춰서 위 3개 중 자동으로 set 된다.
+```
 
-<br>
-
-- 실전 예제 : 1. 요구사항 분석과 기본 매핑
+- 기본 키 제약 조건 : Not null, unique, 변하면 안됨
+- 미래까지 이 조건을 만족하는 자연키는 찾기 어렵다. 대리키(대체키)를 사용하자
+- 권장 : Long 형 + 대체키 + 키 생성 전략 사용 -> 즉, auto_increment 나 uuid
+- 주민번호와 같이 비즈니스 로직을 가져오지 말자
