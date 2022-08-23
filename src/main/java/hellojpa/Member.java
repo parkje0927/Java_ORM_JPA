@@ -1,23 +1,51 @@
 package hellojpa;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
-@SequenceGenerator(name = "member_seq_generator", sequenceName = "member_seq")
+//@SequenceGenerator(name = "member_seq_generator", sequenceName = "member_seq")
 public class Member {
 
     @Id
+    @GeneratedValue
     private Long id;
 
     @Column(name = "name")
     private String username;
 
-//    private Integer age;
-//
-//    //enum 에는 ORDINAL 은 사용하지 말기!!!
+//    @Column(name = "TEAM_ID")
+//    private Long teamId;
+
+    //member 입장에서는 many 이고 team 은 one 이므로
+    @ManyToOne
+    @JoinColumn(name = "TEAM_ID")
+    private Team team;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
+    //    //enum 에는 ORDINAL 은 사용하지 말기!!!
 //    @Enumerated(EnumType.STRING)
 //    private RoleType roleType;
 //
@@ -35,28 +63,4 @@ public class Member {
 //
 //    @Transient //그냥 메모리에만 사용하고 db 에는 저장하지 말기 -> 컬럼이 생기지 않음
 //    private int temp;
-//
-//    public Member() {
-//    }
-
-//    public Member(Long id, String name) {
-//        this.id = id;
-//        this.name = name;
-//    }
-//
-//    public Long getId() {
-//        return id;
-//    }
-//
-//    public void setId(Long id) {
-//        this.id = id;
-//    }
-//
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public void setName(String name) {
-//        this.name = name;
-//    }
 }

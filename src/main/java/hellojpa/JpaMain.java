@@ -106,6 +106,41 @@ public class JpaMain {
 //            System.out.println("=============");
 //            tx.commit();
 
+            //객체지향스럽지 않게 설계
+//            Team team = new Team();
+//            team.setName("TeamA");
+//            em.persist(team);
+//
+//            Member member = new Member();
+//            member.setTeamId(team.getTeamId());
+//            member.setUsername("Member1");
+//            em.persist(member);
+
+            //단방향 연관관계
+            Team team = new Team();
+            team.setName("TeamA");
+            em.persist(team);
+
+            Member member = new Member();
+            member.setUsername("Member1");
+            member.setTeam(team);
+            em.persist(member);
+
+            //깔끔하게 지우고 실행하고 싶을 때
+//            em.flush();
+//            em.clear();
+            //
+
+            //캐시에서 가져옴.
+            Member findMember = em.find(Member.class, member.getId());
+            Team findTeam = findMember.getTeam();
+
+            System.out.println("findTeam.toString() = " + findTeam.toString());
+
+            //업데이트하고 싶을 때는 findMember.setTeam("new team") 해주면 업데이트 된다.
+
+            tx.commit();
+
         } catch (Exception e) {
             tx.rollback();
         } finally {
