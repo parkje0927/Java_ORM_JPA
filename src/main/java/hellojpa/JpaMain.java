@@ -126,18 +126,24 @@ public class JpaMain {
             member.setTeam(team);
             em.persist(member);
 
-            //깔끔하게 지우고 실행하고 싶을 때
-//            em.flush();
-//            em.clear();
-            //
-
             //캐시에서 가져옴.
             Member findMember = em.find(Member.class, member.getId());
             Team findTeam = findMember.getTeam();
-
             System.out.println("findTeam.toString() = " + findTeam.toString());
 
             //업데이트하고 싶을 때는 findMember.setTeam("new team") 해주면 업데이트 된다.
+            
+            //깔끔하게 지우고 깔끔하게 DB 에서 가져오도록 실행
+            em.flush();
+            em.clear();
+            
+            //양방향 연관관계
+            Member findMember2 = em.find(Member.class, member.getId());
+            List<Member> members = findMember2.getTeam().getMembers();
+
+            for (Member m : members) {
+                System.out.println("m.getUsername() = " + m.getUsername());
+            }
 
             tx.commit();
 
