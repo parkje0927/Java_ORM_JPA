@@ -116,33 +116,57 @@ public class JpaMain {
 //            member.setUsername("Member1");
 //            em.persist(member);
 
-            //단방향 연관관계
+//            //단방향 연관관계
+//            Team team = new Team();
+//            team.setName("TeamA");
+//            em.persist(team);
+//
+//            Member member = new Member();
+//            member.setUsername("Member1");
+//            member.setTeam(team);
+//            em.persist(member);
+//
+//            //캐시에서 가져옴.
+//            Member findMember = em.find(Member.class, member.getId());
+//            Team findTeam = findMember.getTeam();
+//            System.out.println("findTeam.toString() = " + findTeam.toString());
+//
+//            //업데이트하고 싶을 때는 findMember.setTeam("new team") 해주면 업데이트 된다.
+//
+//            //깔끔하게 지우고 깔끔하게 DB 에서 가져오도록 실행
+//            em.flush();
+//            em.clear();
+//
+//            //양방향 연관관계
+//            Member findMember2 = em.find(Member.class, member.getId());
+//            List<Member> members = findMember2.getTeam().getMembers();
+//
+//            for (Member m : members) {
+//                System.out.println("m.getUsername() = " + m.getUsername());
+//            }
+
             Team team = new Team();
             team.setName("TeamA");
             em.persist(team);
 
             Member member = new Member();
             member.setUsername("Member1");
-            member.setTeam(team);
+//            member.setTeam(team);
+            member.changeTeam(team);
             em.persist(member);
 
-            //캐시에서 가져옴.
-            Member findMember = em.find(Member.class, member.getId());
-            Team findTeam = findMember.getTeam();
-            System.out.println("findTeam.toString() = " + findTeam.toString());
+            team.getMembers().add(member);
 
-            //업데이트하고 싶을 때는 findMember.setTeam("new team") 해주면 업데이트 된다.
-            
-            //깔끔하게 지우고 깔끔하게 DB 에서 가져오도록 실행
             em.flush();
             em.clear();
-            
-            //양방향 연관관계
-            Member findMember2 = em.find(Member.class, member.getId());
-            List<Member> members = findMember2.getTeam().getMembers();
 
-            for (Member m : members) {
-                System.out.println("m.getUsername() = " + m.getUsername());
+            Team findTeam = em.find(Team.class, team.getTeamId());
+            //flush, clear 안 하면 1차 캐시에 들어가 있다. 위 상태 그대로 들어가 있어서 아래 List 가져올 수 없다.
+            //따라서 team.getMembers().add(member); 이렇게와 같이 양쪽 다 세팅해줘야 한다.
+            List<Member> members = findTeam.getMembers();
+
+            for (Member member1 : members) {
+                System.out.println("member1 = " + member1.getUsername());
             }
 
             tx.commit();

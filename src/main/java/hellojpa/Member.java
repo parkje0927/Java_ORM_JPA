@@ -43,6 +43,12 @@ public class Member {
 
     public void setTeam(Team team) {
         this.team = team;
+//        team.getMembers().add(this);
+    }
+
+    public void changeTeam(Team team) {
+        this.team = team;
+        team.getMembers().add(this);
     }
 
     //    //enum 에는 ORDINAL 은 사용하지 말기!!!
