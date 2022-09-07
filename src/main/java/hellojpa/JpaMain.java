@@ -145,29 +145,45 @@ public class JpaMain {
 //                System.out.println("m.getUsername() = " + m.getUsername());
 //            }
 
-            Team team = new Team();
-            team.setName("TeamA");
-            em.persist(team);
+//            Team team = new Team();
+//            team.setName("TeamA");
+//            em.persist(team);
+//
+//            Member member = new Member();
+//            member.setUsername("Member1");
+////            member.setTeam(team);
+//            member.changeTeam(team);
+//            em.persist(member);
+//
+//            team.getMembers().add(member);
+//
+//            em.flush();
+//            em.clear();
+//
+//            Team findTeam = em.find(Team.class, team.getTeamId());
+//            //flush, clear 안 하면 1차 캐시에 들어가 있다. 위 상태 그대로 들어가 있어서 아래 List 가져올 수 없다.
+//            //따라서 team.getMembers().add(member); 이렇게와 같이 양쪽 다 세팅해줘야 한다.
+//            List<Member> members = findTeam.getMembers();
+//
+//            for (Member member1 : members) {
+//                System.out.println("member1 = " + member1.getUsername());
+//            }
 
-            Member member = new Member();
-            member.setUsername("Member1");
-//            member.setTeam(team);
-            member.changeTeam(team);
-            em.persist(member);
+            Movie movie = new Movie();
+            movie.setDirector("aaa");
+            movie.setActor("bbb");
+            movie.setName("바람과 함께 사라지다");
+            movie.setPrice(10000);
 
-            team.getMembers().add(member);
+            em.persist(movie);
 
+            //1차 캐시 지우기
             em.flush();
             em.clear();
 
-            Team findTeam = em.find(Team.class, team.getTeamId());
-            //flush, clear 안 하면 1차 캐시에 들어가 있다. 위 상태 그대로 들어가 있어서 아래 List 가져올 수 없다.
-            //따라서 team.getMembers().add(member); 이렇게와 같이 양쪽 다 세팅해줘야 한다.
-            List<Member> members = findTeam.getMembers();
-
-            for (Member member1 : members) {
-                System.out.println("member1 = " + member1.getUsername());
-            }
+            //조인해서 가져온다.
+            Movie findMovie = em.find(Movie.class, movie.getId());
+            System.out.println("findMovie = " + findMovie);
 
             tx.commit();
 
