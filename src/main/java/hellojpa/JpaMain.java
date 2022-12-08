@@ -1,5 +1,7 @@
 package hellojpa;
 
+import org.hibernate.Hibernate;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -169,26 +171,63 @@ public class JpaMain {
 //                System.out.println("member1 = " + member1.getUsername());
 //            }
 
-            Movie movie = new Movie();
-            movie.setDirector("aaa");
-            movie.setActor("bbb");
-            movie.setName("바람과 함께 사라지다");
-            movie.setPrice(10000);
+//            Movie movie = new Movie();
+//            movie.setDirector("aaa");
+//            movie.setActor("bbb");
+//            movie.setName("바람과 함께 사라지다");
+//            movie.setPrice(10000);
+//
+//            em.persist(movie);
+//
+//            //1차 캐시 지우기
+//            em.flush();
+//            em.clear();
+//
+//            //조인해서 가져온다.
+//            Movie findMovie = em.find(Movie.class, movie.getId());
+//            System.out.println("findMovie = " + findMovie);
 
-            em.persist(movie);
+            /**
+             * 프록시
+             */
 
-            //1차 캐시 지우기
+            Member member = new Member();
+            member.setUsername("hello");
+
+            em.persist(member);
+
             em.flush();
             em.clear();
 
-            //조인해서 가져온다.
-            Movie findMovie = em.find(Movie.class, movie.getId());
-            System.out.println("findMovie = " + findMovie);
+//            Member findMemberByReference = em.getReference(Member.class, member.getId());
+//            System.out.println("em.getReference 를 하면 아래에서 직접 값을 참조할 때서야 query 가 나간다.");
+//            System.out.println("findMemberByReference.getClass() = " + findMemberByReference.getClass());
+//            System.out.println("findMemberByReference = " + findMemberByReference.getUsername());
 
+//            Member findMember = em.find(Member.class, member.getId());
+            Member findMemberByReference = em.getReference(Member.class, member.getId());
+
+            //jpa 에서는 == 비교시 true 로 만들어주기 위해 위 상황처럼 이미 영속성 컨텍스트에 엔티티가 있다면 두 개의 타입이 같아진다.
+//            System.out.println("a == a : " + (findMember == findMemberByReference));
+            //먼저 프록시로 하고 그 다음 find 로 하면 둘 다 프록시 객체로 되어 == 이 true 가 된다.
+            //프록시든 아니든 == 을 맞춰준다.
+            //만약 둘 다 프록시로 조회해오는데 그 사이에 getUsername() 을 호출해서 프록시 초기화되면
+            //두 개 프록시를 == 비교하면 -> 그래도 true! 둘 다 프록시 객체이다.
+
+            //(***) 영속성 컨텍스트의 도움을 받을 수 없는 준영속 상태일 때, 프록시를 초기화하면 문제가 발생한다.
+//            em.detach(findMemberByReference); //or em.close() 해도 문제가 발생한다.
+//            findMemberByReference.getUsername();
+
+            //1)
+            System.out.println("isLoaded= " + emf.getPersistenceUnitUtil().isLoaded(findMemberByReference));
+            //2) 강제 초기화하거나 아니면 findMemberByReference.getUsername() 처럼 강제 초기화
+            Hibernate.initialize(findMemberByReference);
+            
             tx.commit();
 
         } catch (Exception e) {
             tx.rollback();
+            e.printStackTrace();
         } finally {
             em.close();
         }
