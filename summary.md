@@ -257,3 +257,27 @@ em.persist(member);
   - 프록시 인스턴스의 초기화 여부 확인 PersistenceUnitUtil.isLoaded(Object entity)
   - 프록시 클래스 확인 방법
   - 프록시 강제 초기화
+
+### 즉시 로딩과 지연 로딩
+- 지연 로딩 FetchType.LAZY
+  - 지연 로딩으로 하면 프록시로 조회
+  - 실제 Member 안에 Team 이 있을 때 Team 의 getName 을 할 때 초기화가 일어난다.
+- 즉시 로딩 FetchType.EAGER
+  - 애초에 em.find 를 할 때부터 한 번에 다 가져온다.
+  - Member 조회 시 항상 Team 도 조회
+- 프록시와 즉시 로딩 주의
+  - (***)가급적 지연 로딩만 사용(특히 실무에서)
+  - 즉시 로딩을 적용하면 예상하지 못한 SQL 이 발생
+    - join 걸린 것들 모두 쿼리가 나간다. 실무에서는 지연 로딩 사용!!!
+  - 즉시 로딩을 JPQL 에서 N+1 문제를 일으킨다.
+    - SQL 로 번역이 되면 -> Member 조회해오는데 Team 이 즉시 로딩이라면 해당 데이터를 다 가져와야함.
+    - 최초 쿼리 1개를 나갔는데, 추가적으로 N 개가 나가는 것을 의미
+    - 즉, select * from Member m; 하나 나가는데 즉시 로딩이 걸린 것들 N 개가 쿼리 나간다.
+  - @ManyToOne, @OneToOne 은 기본이 즉시 로딩 -> LAZY 로 설정!!!
+  - @OneToMany, @ManyToMany 는 기본이 지연 로딩
+- 지연 로딩 활용
+  - Member 와 Team 은 자주 함께 사용 -> 즉시 로딩
+  - Member 와 Order 는 가끔 사용 -> 지연 로딩
+  - Order 와 Product 는 자주 함께 사용 -> 즉시 로딩
+- 하지만 이론적인거고 실무에서는 그냥 다 지연 로딩!!!
+- JPQL fetch 조인이나 엔티티 그래프 기능을 사용해라!!!

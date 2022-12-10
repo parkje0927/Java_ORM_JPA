@@ -222,7 +222,7 @@ public class JpaMain {
             System.out.println("isLoaded= " + emf.getPersistenceUnitUtil().isLoaded(findMemberByReference));
             //2) 강제 초기화하거나 아니면 findMemberByReference.getUsername() 처럼 강제 초기화
             Hibernate.initialize(findMemberByReference);
-            
+
             tx.commit();
 
         } catch (Exception e) {
